@@ -1,7 +1,16 @@
-import { Controller, Get, Query, ParseIntPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Query,
+  ParseIntPipe,
+  UseFilters,
+  BadRequestException,
+} from '@nestjs/common';
 import { SoapToRestService } from './soap-to-rest.service';
+import { SoapExceptionFilter } from '../common/filters/soap-exception.filter';
 
 @Controller('calculator')
+@UseFilters(SoapExceptionFilter)
 export class SoapToRestController {
   constructor(private readonly soapToRestService: SoapToRestService) {}
 
@@ -34,6 +43,7 @@ export class SoapToRestController {
     @Query('a', ParseIntPipe) a: number,
     @Query('b', ParseIntPipe) b: number,
   ) {
+    if (b === 0) throw new BadRequestException('Division by zero is not allowed');
     return this.soapToRestService.divide(a, b);
   }
 }

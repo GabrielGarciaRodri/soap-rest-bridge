@@ -23,10 +23,26 @@ async function bootstrap() {
     CalculatorService: {
       CalculatorPort: {
         Add: (args: any) => {
-          return { result: restToSoapService.add(args.a, args.b) };
+          if (args.a === undefined || args.b === undefined) {
+            throw {
+              Fault: {
+                faultcode: 'Client',
+                faultstring: 'Missing required parameters: a and b',
+              },
+            };
+          }
+          return { result: restToSoapService.add(Number(args.a), Number(args.b)) };
         },
         Subtract: (args: any) => {
-          return { result: restToSoapService.subtract(args.a, args.b) };
+          if (args.a === undefined || args.b === undefined) {
+            throw {
+              Fault: {
+                faultcode: 'Client',
+                faultstring: 'Missing required parameters: a and b',
+              },
+            };
+          }
+          return { result: restToSoapService.subtract(Number(args.a), Number(args.b)) };
         },
       },
     },
