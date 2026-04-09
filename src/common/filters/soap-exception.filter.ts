@@ -19,9 +19,13 @@ export class SoapExceptionFilter implements ExceptionFilter {
 
     // Si es una HttpException la dejamos pasar tal cual
     if (exception instanceof HttpException) {
+      const exceptionResponse = exception.getResponse();
       return response.status(exception.getStatus()).json({
         statusCode: exception.getStatus(),
-        message: exception.message,
+        message:
+          typeof exceptionResponse === 'object' && 'message' in exceptionResponse
+            ? (exceptionResponse as any).message
+            : exception.message,
         path: request.url,
         timestamp: new Date().toISOString(),
       });

@@ -6,9 +6,18 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { RestToSoapService } from './rest-to-soap/rest-to-soap.service';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  app.useGlobalPipes(
+  new ValidationPipe({
+    transform: true,
+    whitelist: true,
+    forbidNonWhitelisted: true,
+  }),
+);
 
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT', 3000);
