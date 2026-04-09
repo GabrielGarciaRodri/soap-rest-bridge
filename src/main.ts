@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { ConfigService } from '@nestjs/config';
 import * as soap from 'soap';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -7,18 +8,19 @@ import { RestToSoapService } from './rest-to-soap/rest-to-soap.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(3000);
 
-  // WSDL
+  const configService = app.get(ConfigService);
+  const port = configService.get<number>('PORT', 3000);
+
+  await app.listen(port);
+
   const wsdl = fs.readFileSync(
     path.join(__dirname, '..', 'src', 'rest-to-soap', 'calculator.wsdl'),
     'utf8',
   );
 
-  // instancia del servicio desde el contenedor de Nest
   const restToSoapService = app.get(RestToSoapService);
 
-  // implementación del servicio SOAP
   const soapService = {
     CalculatorService: {
       CalculatorPort: {
@@ -48,10 +50,10 @@ async function bootstrap() {
     },
   };
 
-  // Monta el servidor SOAP sobre el servidor HTTP de NestJS
+  const soapPath = configService.get<string>('SOAP_SERVER_PATH', '/soap/calculator');
   const httpServer = app.getHttpServer();
-  soap.listen(httpServer, '/soap/calculator', soapService, wsdl);
-
-  console.log('SOAP server running at http://localhost:3000/soap/calculator?wsdl');
+  soap.listen(httpServer, soapPath, soapService, wsdl);
+  console.log(`App running at http://localhost:${port}`);
+  console.log(`SOAP server running at http://localhost:${port}${soapPath}?wsdl`);
 }
 bootstrap();
