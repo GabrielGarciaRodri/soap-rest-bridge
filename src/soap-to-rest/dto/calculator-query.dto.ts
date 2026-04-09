@@ -8,14 +8,14 @@ export class CalculatorQueryDto {
   @IsNumber()
   @IsInt()
   @Type(() => Number)
-  a: number;
+  a!: number;
 
   @ApiProperty({ description: 'Segundo operando', example: 5 })
   @IsNotEmpty()
   @IsNumber()
   @IsInt()
   @Type(() => Number)
-  b: number;
+  b!: number;
 }
 
 export class DivideQueryDto extends CalculatorQueryDto {}
