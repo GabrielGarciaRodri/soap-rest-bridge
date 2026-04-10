@@ -33,7 +33,7 @@ async function bootstrap() {
   SwaggerModule.setup('api/docs', app, document);
 
   const wsdl = fs.readFileSync(
-    path.join(__dirname, '..', 'src', 'rest-to-soap', 'calculator.wsdl'),
+    path.join(__dirname, 'rest-to-soap', 'calculator.wsdl'),
     'utf8',
   );
 
@@ -53,6 +53,21 @@ async function bootstrap() {
             throw { Fault: { faultcode: 'Client', faultstring: 'Missing required parameters: a and b' } };
           }
           return { result: restToSoapService.subtract(Number(args.a), Number(args.b)) };
+        },
+        Multiply: (args: any) => {
+          if (args.a === undefined || args.b === undefined) {
+            throw { Fault: { faultcode: 'Client', faultstring: 'Missing required parameters: a and b' } };
+          }
+          return { result: restToSoapService.multiply(Number(args.a), Number(args.b)) };
+        },
+        Divide: (args: any) => {
+          if (args.a === undefined || args.b === undefined) {
+            throw { Fault: { faultcode: 'Client', faultstring: 'Missing required parameters: a and b' } };
+          }
+          if (Number(args.b) === 0) {
+            throw { Fault: { faultcode: 'Client', faultstring: 'Division by zero' } };
+          }
+          return { result: restToSoapService.divide(Number(args.a), Number(args.b)) };
         },
       },
     },

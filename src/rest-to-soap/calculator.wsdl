@@ -32,6 +32,28 @@
           <xsd:element name="result" type="xsd:int"/>
         </xsd:sequence></xsd:complexType>
       </xsd:element>
+      <xsd:element name="MultiplyRequest">
+        <xsd:complexType><xsd:sequence>
+          <xsd:element name="a" type="xsd:int"/>
+          <xsd:element name="b" type="xsd:int"/>
+        </xsd:sequence></xsd:complexType>
+      </xsd:element>
+      <xsd:element name="MultiplyResponse">
+        <xsd:complexType><xsd:sequence>
+          <xsd:element name="result" type="xsd:int"/>
+        </xsd:sequence></xsd:complexType>
+      </xsd:element>
+      <xsd:element name="DivideRequest">
+        <xsd:complexType><xsd:sequence>
+          <xsd:element name="a" type="xsd:int"/>
+          <xsd:element name="b" type="xsd:int"/>
+        </xsd:sequence></xsd:complexType>
+      </xsd:element>
+      <xsd:element name="DivideResponse">
+        <xsd:complexType><xsd:sequence>
+          <xsd:element name="result" type="xsd:decimal"/>
+        </xsd:sequence></xsd:complexType>
+      </xsd:element>
     </xsd:schema>
   </types>
 
@@ -40,6 +62,10 @@
   <message name="AddResponse"><part name="parameters" element="tns:AddResponse"/></message>
   <message name="SubtractRequest"><part name="parameters" element="tns:SubtractRequest"/></message>
   <message name="SubtractResponse"><part name="parameters" element="tns:SubtractResponse"/></message>
+  <message name="MultiplyRequest"><part name="parameters" element="tns:MultiplyRequest"/></message>
+  <message name="MultiplyResponse"><part name="parameters" element="tns:MultiplyResponse"/></message>
+  <message name="DivideRequest"><part name="parameters" element="tns:DivideRequest"/></message>
+  <message name="DivideResponse"><part name="parameters" element="tns:DivideResponse"/></message>
 
   <!-- PortType -->
   <portType name="CalculatorPortType">
@@ -50,6 +76,14 @@
     <operation name="Subtract">
       <input message="tns:SubtractRequest"/>
       <output message="tns:SubtractResponse"/>
+    </operation>
+    <operation name="Multiply">
+      <input message="tns:MultiplyRequest"/>
+      <output message="tns:MultiplyResponse"/>
+    </operation>
+    <operation name="Divide">
+      <input message="tns:DivideRequest"/>
+      <output message="tns:DivideResponse"/>
     </operation>
   </portType>
 
@@ -63,6 +97,16 @@
     </operation>
     <operation name="Subtract">
       <soap:operation soapAction="Subtract"/>
+      <input><soap:body use="literal"/></input>
+      <output><soap:body use="literal"/></output>
+    </operation>
+    <operation name="Multiply">
+      <soap:operation soapAction="Multiply"/>
+      <input><soap:body use="literal"/></input>
+      <output><soap:body use="literal"/></output>
+    </operation>
+    <operation name="Divide">
+      <soap:operation soapAction="Divide"/>
       <input><soap:body use="literal"/></input>
       <output><soap:body use="literal"/></output>
     </operation>
