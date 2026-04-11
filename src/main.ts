@@ -7,9 +7,13 @@ import * as path from 'path';
 import { RestToSoapService } from './rest-to-soap/rest-to-soap.service';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { correlationIdMiddleware } from './common/middleware/correlation-id.middleware';
+import { requestLoggingMiddleware } from './common/middleware/request-logging.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.use(correlationIdMiddleware);
+  app.use(requestLoggingMiddleware);
 
   app.useGlobalPipes(
   new ValidationPipe({
